@@ -20,10 +20,10 @@ int calcHash(int key, int attempt, int size) {
 
 int hashInsert(Person *persons, int key, int size) {
     for (int attempt = 0; attempt < size; ++attempt) {
-        int hash = calcHash(key, attempt, size);
-        Person person = *(persons + hash);
+        int pos = calcHash(key, attempt, size);
+        Person person = *(persons + pos);
 
-        if(person.status != USED_CELL) return hash;
+        if(person.status != USED_CELL) return pos;
     }
 
     return ERROR;
@@ -31,11 +31,23 @@ int hashInsert(Person *persons, int key, int size) {
 
 int hashSearch(Person* persons, int key, int size) {
     for(int attempt = 0; attempt < size; ++attempt) {
-        int hash = calcHash(key, attempt, size);
-        Person person = *(persons + hash);
+        int pos = calcHash(key, attempt, size);
+        Person person = *(persons + pos);
 
-        if(person.status != EMPTY_CELL) if(person.key == key) return hash;
-            else return ERROR;
+        if(person.status == USED_CELL) { if(person.key == key) return pos; }
+        else if(person.status == EMPTY_CELL) break;
+    }
+
+    return ERROR;
+}
+
+int hashRemove(Person* persons, int key, int size) {
+    for(int attempt = 0; attempt < size; ++attempt) {
+        int pos = calcHash(key,  attempt, size);
+        Person person = *(persons + pos);
+
+        if(person.status == USED_CELL) { if(person.key == key) return pos; }
+        else if(person.status == EMPTY_CELL) break;
     }
 
     return ERROR;
@@ -54,18 +66,19 @@ void printPerson(Person* person) {
     printf("\n");
 }
 
+void removePersonFromDB(Person* persons, int pos) {
+    Person* person = persons + pos;
+    person->status = REMOVED_CELL;
+}
+
 void getPersonFromDB(Person* persons, int pos) {
     Person* person = persons + pos;
     printPerson(person);
 }
 
-int addToDatabase(Person *persons, Person *person, int pos) {
+void addPersonToDB(Person *persons, Person *person, int pos) {
     Person* location = persons + pos;
     *location = *person;
-
-    if(location->key == person->key) return SUCCESS;
-
-    return ERROR;
 }
 
 Person* getPersonInfo() {
@@ -89,10 +102,6 @@ void listAllPersons(Person* persons, int size) {
     }
 }
 
-void removePerson(Person* persons, int size) {
-
-}
-
 int askKey() {
     int key;
 
@@ -100,6 +109,19 @@ int askKey() {
     scanf("%d", &key);
 
     return key;
+}
+
+void removePerson(Person* persons, int size) {
+    printf("\n");
+
+    int key = askKey();
+    int pos = hashRemove(persons, key, size);
+
+    if(pos != ERROR) removePersonFromDB(persons, pos);
+    else printf("Não foi possível remover!\n");
+
+    printf("\n");
+    printf("\n");
 }
 
 void searchPerson(Person* persons, int size) {
@@ -111,7 +133,6 @@ void searchPerson(Person* persons, int size) {
     if(pos != ERROR) getPersonFromDB(persons, pos);
     else printf("Não foi possível encontrar!\n");
 
-
     printf("\n");
     printf("\n");
 }
@@ -122,7 +143,7 @@ void addPerson(Person* persons, int size) {
     Person* person = getPersonInfo();
     int pos = hashInsert(persons, person->key, size);
 
-    if(pos != ERROR) addToDatabase(persons, person, pos);
+    if(pos != ERROR) addPersonToDB(persons, person, pos);
     else printf("Não foi possível adicionar!\n");
 
     printf("\n");
