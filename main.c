@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "hash_helper.h"
 
+// Get user's option
 int getUserOption() {
     int answer = -1;
 
@@ -22,6 +23,7 @@ int getUserOption() {
     return answer;
 }
 
+// Get user's desired hash method
 int getUserMethod() {
     int method = -1;
 
@@ -41,6 +43,7 @@ int getUserMethod() {
     return method;
 }
 
+// Handle the menu content
 void menu(Person* persons, int size) {
     int answer = 0;
     int method = getUserMethod();
@@ -58,6 +61,7 @@ void menu(Person* persons, int size) {
     }
 }
 
+// Create dataset, start program and free memory when execution finish
 int main() {
     int size = 10;
     Person* persons = (Person*) malloc(sizeof(Person) * size);
