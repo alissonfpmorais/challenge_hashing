@@ -17,7 +17,7 @@ typedef struct {
 void printPerson(Person* person);
 void removePersonFromDB(Person* persons, int pos);
 void getPersonFromDB(Person* persons, int pos);
-void addPersonToDB(Person *persons, Person *person, int pos);
+void addPersonToDB(Person* persons, Person* person, int pos);
 void listAllPersons(Person* persons, int size);
 void removePerson(Person* persons, int size, int method);
 void searchPerson(Person* persons, int size, int method);

@@ -57,7 +57,7 @@ void getPersonFromDB(Person* persons, int pos) {
     printPerson(person);
 }
 
-void addPersonToDB(Person *persons, Person *person, int pos) {
+void addPersonToDB(Person* persons, Person* person, int pos) {
     Person* location = persons + pos;
     *location = *person;
 }
